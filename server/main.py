@@ -64,7 +64,7 @@ def createMessage(conversation_id,user_id,content):
 	conn = mysql.connect()
 	c = conn.cursor()
 	c.execute("""INSERT INTO Message(message,conversation_id,user_id)
-				 VALUES (%s,%d,%d)""" % content,conversation_id,user_id)
+				 VALUES ('%s',%d,%d)""" % (content,int(conversation_id),int(user_id)))
 	conn.commit()
 	conn.close()
 
@@ -149,18 +149,18 @@ def validate_token(token):
 		json = {"valid_token":False}
 	return jsonify(json)
 
-@app.route("/api/<string:token>/create_message/<int:conversation_id>",methods=["POST"])
+@app.route("/api/<string:token>/create_message/<int:conversation_id>",methods=["GET","POST"])
 def create_message(token,conversation_id):
+	if request.method == "GET":
+		return render_template("create_message.html")
 	token = validate_get_Token(mysql,token)
 	if not token:
 		json = {"invalid_token":True}
 		return jsonify(json)
 	content = request.form["content"]
-	try:
-		createMessage(conversation_id,token[2],content)
-		json = {"successful":True}
-	except:
-		json = {"successful":False}
+	print(token)
+	createMessage(conversation_id,token[1],content)
+	json = {"successful":True}
 	return jsonify(json)
 
 
