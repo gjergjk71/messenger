@@ -5,6 +5,7 @@ class ChatWindow():
 	def __init__(self,master):
 		self.master = master
 		self.setupChatUI(master)
+		self.current_conversation_id = None
 
 	def setupChatUI(self,master):
 		l1 = tk.Label(master,text="Messenger",font=("",50))
@@ -16,6 +17,7 @@ class ChatWindow():
 		txt.config(font=("consolas", 12), undo=True, wrap='word')
 		txt2 = tk.Text(master,width=60,height=2)
 		txt2.config(font=("consolas", 12), undo=True, wrap='word')
+		txt2.bind("<Return>",lambda x:self.sendMessage(content=txt2.get("1.0",tk.END)))
 		b1 = tk.Button(master,width=20,height=2,text="SEND")
 		self.ChatWidgets = {"l1":l1,
 							"txt_frm":txt_frm,
@@ -52,3 +54,15 @@ class ChatWindow():
 	def hideChat(self):
 		for widget_name,widget_instance in self.ChatWidgets.items():
 			widget_instance.place_forget()
+
+	def sendMessage(self,content):
+		print(content)
+		self.ChatWidgets["txt2"].delete("1.0",tk.END)
+		#try:
+		with open("token") as file:
+			token = file.readlines()[0]
+			send_message_api = "http://localhost:8080/api/{}/create_message/{}".format(token,self.current_conversation_id)
+		response = requests.post(send_message_api,data={"content":content})
+		print(response.json())
+		#except:
+		#	print("something unexcepted happened")
