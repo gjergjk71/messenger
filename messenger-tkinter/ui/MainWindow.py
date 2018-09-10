@@ -72,6 +72,7 @@ class MainWindow(LoginWindow):
 		if json.get("receiver_not_found"):
 			print("receiver_not_found")
 		else:
+			self.chat_ui.current_conversation_id = json["conversation_id"]
 			print(json)
 			self.hideMain()
 			self.chat_ui.showChat(receiver)
