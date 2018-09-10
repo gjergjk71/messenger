@@ -5,10 +5,10 @@ import secrets
 
 app = Flask(__name__)
 mysql = MySQL()
-app.config["MYSQL_DATABASE_USER"] = "root"
-app.config["MYSQL_DATABASE_PASSWORD"] = "gjergji.123"
-app.config["MYSQL_DATABASE_DB"] = "messenger"
-app.config["MYSQL_DATABASE_HOST"] = "localhost"
+app.config["MYSQL_DATABASE_USER"] = "<database_user>"
+app.config["MYSQL_DATABASE_PASSWORD"] = "<database_password>"
+app.config["MYSQL_DATABASE_DB"] = "<database_name>"
+app.config["MYSQL_DATABASE_HOST"] = "<database_host>"
 mysql.init_app(app)
 
 def createToken(db,user_id):
