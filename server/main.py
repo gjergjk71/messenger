@@ -60,6 +60,14 @@ def getMessages(mysql,conv_id):
 	conn.close()
 	return messages
 
+def createMessage(conversation_id,user_id,content):
+	conn = mysql.connect()
+	c = conn.cursor()
+	c.execute("""INSERT INTO Message(message,conversation_id,user_id)
+				 VALUES (%s,%d,%d)""" % content,conversation_id,user_id)
+	conn.commit()
+	conn.close()
+
 @app.route("/api/login",methods=["GET","POST"])
 def login():
 	if request.method == "GET":
@@ -142,7 +150,7 @@ def validate_token(token):
 	return jsonify(json)
 
 @app.route("/api/<string:token>/create_message/<int:conversation_id>",methods=["POST"])
-def create_message(token,conversation_id)
+def create_message(token,conversation_id):
 	token = validate_get_Token(mysql,token)
 	if not token:
 		json = {"invalid_token":True}
@@ -151,7 +159,7 @@ def create_message(token,conversation_id)
 	try:
 		createMessage(conversation_id,token[2],content)
 		json = {"successful":True}
-	else:
+	except:
 		json = {"successful":False}
 	return jsonify(json)
 
