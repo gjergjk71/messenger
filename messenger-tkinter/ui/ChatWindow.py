@@ -31,8 +31,8 @@ class ChatWindow():
 		response = requests.get(conversation_api)
 		json = response.json()
 
-		self.ChatWidgets["txt"].delete("0.0",tk.END)
 		self.ChatWidgets["txt"].config(state="normal")
+		self.ChatWidgets["txt"].delete("1.0",tk.END)
 		for message in json["messages"]:
 			self.ChatWidgets["txt"].insert(tk.END,f"[{message[0]}] ({message[2]}) - {message[1]}\n")
 		self.ChatWidgets["txt"].config(state="disabled")	
