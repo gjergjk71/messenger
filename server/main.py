@@ -105,7 +105,6 @@ def chat(token,username):
 	token = validate_get_Token(mysql,token)
 	conversation_id = "Not found"
 	if not token:
-		print("DSAD")
 		json = {"invalid_token":True}
 		return jsonify(json)
 	sender_id = token[1]
@@ -141,6 +140,22 @@ def validate_token(token):
 	else:
 		json = {"valid_token":False}
 	return jsonify(json)
+
+@app.route("/api/<string:token>/create_message/<conversation_id>",methods=["POST"])
+def create_message(token,conversation_id)
+	token = validate_get_Token(mysql,token)
+	if not token:
+		json = {"invalid_token":True}
+		return jsonify(json)
+	content = request.form["content"]
+	try:
+		createMessage(conversation_id,token[2],content)
+		json = {"successful":True}
+	else:
+		json = {"successful":False}
+
+	return jsonify(json)
+
 
 if __name__ == "__main__":
 	app.run(port=8080,debug=True)
