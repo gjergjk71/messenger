@@ -24,20 +24,24 @@ class ChatWindow():
 		self.updateMessages(receiver)
 
 	def updateMessages(self,receiver):
-		with open("token") as file:
-			token = file.readlines()[0]
-			conversation_api = "http://localhost:8080/api/{}/chat/{}".format(token,receiver)
-		print(conversation_api)
-		response = requests.get(conversation_api)
-		json = response.json()
+		try:
+			with open("token") as file:
+				token = file.readlines()[0]
+				conversation_api = "http://localhost:8080/api/{}/chat/{}".format(token,receiver)
+			print(conversation_api)
+			response = requests.get(conversation_api)
+			json = response.json()
 
-		self.ChatWidgets["txt"].config(state="normal")
-		self.ChatWidgets["txt"].delete("1.0",tk.END)
-		for message in json["messages"]:
-			self.ChatWidgets["txt"].insert(tk.END,f"[{message[0]}] ({message[2]}) - {message[1]}\n")
-		self.ChatWidgets["txt"].config(state="disabled")	
-		self.master.after(1000,lambda:self.updateMessages(receiver=receiver))	
-		print("Messages updated")
+			self.ChatWidgets["txt"].config(state="normal")
+			self.ChatWidgets["txt"].delete("1.0",tk.END)
+			for message in json["messages"]:
+				self.ChatWidgets["txt"].insert(tk.END,f"[{message[0]}] ({message[2]}) - {message[1]}\n")
+			self.ChatWidgets["txt"].config(state="disabled")	
+			self.master.after(1000,lambda:self.updateMessages(receiver=receiver))	
+			print("Messages updated")
+		except requests.exceptions.ConnectionError:
+			print("Failed to establish a new connection: [Errno 111] Connection refused',))")
+
 	def hideChat(self):
 		for widget_name,widget_instance in self.ChatWidgets.items():
 			widget_instance.place_forget()
