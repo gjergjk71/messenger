@@ -68,8 +68,10 @@ class MainWindow(LoginWindow):
 		print(conversation_api)
 		response = requests.get(conversation_api)
 		json = response.json()
+
 		if json.get("receiver_not_found"):
 			print("receiver_not_found")
 		else:
+			print(json)
 			self.hideMain()
-			self.chat_ui.showChat()
+			self.chat_ui.showChat(receiver)
