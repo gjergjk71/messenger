@@ -141,7 +141,7 @@ def validate_token(token):
 		json = {"valid_token":False}
 	return jsonify(json)
 
-@app.route("/api/<string:token>/create_message/<conversation_id>",methods=["POST"])
+@app.route("/api/<string:token>/create_message/<int:conversation_id>",methods=["POST"])
 def create_message(token,conversation_id)
 	token = validate_get_Token(mysql,token)
 	if not token:
@@ -153,7 +153,6 @@ def create_message(token,conversation_id)
 		json = {"successful":True}
 	else:
 		json = {"successful":False}
-
 	return jsonify(json)
 
 
