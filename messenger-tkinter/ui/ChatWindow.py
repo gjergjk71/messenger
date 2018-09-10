@@ -16,15 +16,18 @@ class ChatWindow():
 		txt.config(font=("consolas", 12), undo=True, wrap='word')
 		txt2 = tk.Text(master,width=60,height=2)
 		txt2.config(font=("consolas", 12), undo=True, wrap='word')
+		b1 = tk.Button(master,width=20,height=2,text="SEND")
 		self.ChatWidgets = {"l1":l1,
 							"txt_frm":txt_frm,
 							"txt":txt,
-							"txt2":txt2}
+							"txt2":txt2,
+							"b1":b1}
 	def showChat(self,receiver):
 		self.ChatWidgets["txt_frm"].place(x=100,y=100)
 		self.ChatWidgets["l1"].place(x=10,y=10)
 		self.ChatWidgets["txt"].place(x=1,y=1)
 		self.ChatWidgets["txt2"].place(x=80,y=510)
+		self.ChatWidgets["b1"].place(x=700,y=510)
 		self.updateMessages(receiver)
 
 	def updateMessages(self,receiver):
