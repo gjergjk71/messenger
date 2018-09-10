@@ -37,10 +37,10 @@ class ChatWindow():
 			for message in json["messages"]:
 				self.ChatWidgets["txt"].insert(tk.END,f"[{message[0]}] ({message[2]}) - {message[1]}\n")
 			self.ChatWidgets["txt"].config(state="disabled")	
-			self.master.after(1000,lambda:self.updateMessages(receiver=receiver))	
 			print("Messages updated")
 		except requests.exceptions.ConnectionError:
 			print("Failed to establish a new connection: [Errno 111] Connection refused',))")
+		self.master.after(1000,lambda:self.updateMessages(receiver=receiver))	
 
 	def hideChat(self):
 		for widget_name,widget_instance in self.ChatWidgets.items():
