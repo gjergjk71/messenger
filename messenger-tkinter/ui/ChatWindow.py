@@ -9,18 +9,22 @@ class ChatWindow():
 	def setupChatUI(self,master):
 		l1 = tk.Label(master,text="Messenger",font=("",50))
 
-		txt_frm = tk.Frame(self.master, width=750, height=600)
+		txt_frm = tk.Frame(self.master, width=750, height=400)
 
 		txt = tk.Text(txt_frm, borderwidth=2, relief="sunken")
 		txt.config(state="disabled")
 		txt.config(font=("consolas", 12), undo=True, wrap='word')
+		txt2 = tk.Text(master,width=60,height=2)
+		txt2.config(font=("consolas", 12), undo=True, wrap='word')
 		self.ChatWidgets = {"l1":l1,
 							"txt_frm":txt_frm,
-							"txt":txt}
+							"txt":txt,
+							"txt2":txt2}
 	def showChat(self,receiver):
 		self.ChatWidgets["txt_frm"].place(x=100,y=100)
 		self.ChatWidgets["l1"].place(x=10,y=10)
 		self.ChatWidgets["txt"].place(x=1,y=1)
+		self.ChatWidgets["txt2"].place(x=80,y=510)
 		self.updateMessages(receiver)
 
 	def updateMessages(self,receiver):
