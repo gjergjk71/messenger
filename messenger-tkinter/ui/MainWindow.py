@@ -11,7 +11,7 @@ class MainWindow(LoginWindow):
 		self.master = master
 		self.master.title("Messenger")
 		self.w = 900 # width for the Tk root
-		self.h = 500 # height for the Tk root
+		self.h = 600 # height for the Tk root
 
 		# get screen width and height
 		self.ws = master.winfo_screenwidth() # width of the screen
