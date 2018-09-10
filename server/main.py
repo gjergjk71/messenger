@@ -2,13 +2,14 @@ from flask import Flask,request,jsonify,render_template
 from flaskext.mysql import MySQL
 import bcrypt
 import secrets
+import os
 
 app = Flask(__name__)
 mysql = MySQL()
-app.config["MYSQL_DATABASE_USER"] = "<database_user>"
-app.config["MYSQL_DATABASE_PASSWORD"] = "<database_password>"
-app.config["MYSQL_DATABASE_DB"] = "<database_name>"
-app.config["MYSQL_DATABASE_HOST"] = "<database_host>"
+app.config["MYSQL_DATABASE_USER"] = os.environ.get("MYSQL_DATABASE_USER")
+app.config["MYSQL_DATABASE_PASSWORD"] = os.environ.get("MYSQL_DATABASE_PASSWORD")
+app.config["MYSQL_DATABASE_DB"] = os.environ.get("MYSQL_DATABASE_DB")
+app.config["MYSQL_DATABASE_HOST"] = os.environ.get("MYSQL_DATABASE_HOST")
 mysql.init_app(app)
 
 def createToken(db,user_id):
