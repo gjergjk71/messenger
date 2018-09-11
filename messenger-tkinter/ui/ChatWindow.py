@@ -2,7 +2,8 @@ import tkinter as tk
 import requests
 
 class ChatWindow():
-	def __init__(self,master):
+	def __init__(self,master,MainWindowInstance):
+		self.MainWindowInstance = MainWindowInstance
 		self.master = master
 		self.setupChatUI(master)
 		self.current_conversation_id = None
@@ -67,3 +68,19 @@ class ChatWindow():
 		print(response.json())
 		#except:
 		#	print("something unexcepted happened")
+	def chat(self,receiver):
+		with open("token") as file:
+			token = file.readlines()[0]
+			print(token)
+			conversation_api = "http://localhost:8080/api/{}/chat/{}".format(token,receiver)
+		print(conversation_api)
+		response = requests.get(conversation_api)
+		json = response.json()
+
+		if json.get("receiver_not_found"):
+			print("receiver_not_found")
+		else:
+			self.current_conversation_id = json["conversation_id"]
+			print(json)
+			self.MainWindowInstance.hideMain()
+			self.showChat(receiver)

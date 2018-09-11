@@ -5,7 +5,7 @@ import requests
 
 class MainWindow:
 	def __init__(self,master):
-		self.chat_ui = ChatWindow(master)
+		self.chat_ui = ChatWindow(master,self)
 		self.login_ui = LoginWindow(master,self)
 		self.setupMainUI(master)
 		self.master = master
