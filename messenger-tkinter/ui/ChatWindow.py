@@ -43,7 +43,7 @@ class ChatWindow():
 
 			self.ChatWidgets["txt"].config(state="normal")
 			self.ChatWidgets["txt"].delete("1.0",tk.END)
-			for message in json["messages"]:
+			for message in reversed(json["messages"]):
 				self.ChatWidgets["txt"].insert(tk.END,f"[{message[0]}] ({message[2]}) - {message[1]}\n")
 			self.ChatWidgets["txt"].config(state="disabled")	
 			print("Messages updated")
@@ -56,6 +56,7 @@ class ChatWindow():
 			widget_instance.place_forget()
 
 	def sendMessage(self,content):
+		#self.ChatWidgets["txt"].xview("end")
 		print(content)
 		self.ChatWidgets["txt2"].delete("1.0",tk.END)
 		#try:
