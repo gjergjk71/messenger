@@ -3,10 +3,10 @@ from ui.LoginWindow import LoginWindow
 from ui.ChatWindow import ChatWindow
 import requests
 
-class MainWindow(LoginWindow):
+class MainWindow:
 	def __init__(self,master):
-		super().__init__(master)
 		self.chat_ui = ChatWindow(master)
+		self.login_ui = LoginWindow(master,self)
 		self.setupMainUI(master)
 		self.master = master
 		self.master.title("Messenger")
@@ -24,13 +24,13 @@ class MainWindow(LoginWindow):
 		# set the dimensions of the screen 
 		# and where it is placed
 		self.master.geometry('%dx%d+%d+%d' % (self.w, self.h, self.x, self.y))
-		self.showLogin()
+		self.checkLoggedIn()
 	def setupMainUI(self,master):
 		l1 = tk.Label(master,text="Messenger",font=("",50))
 		l2  = tk.Label(master,text="Username: ",font=("",40))
 		e1_text = tk.StringVar()
 		e1 = tk.Entry(master,textvariable=e1_text,font=("",20))
-		b1 = tk.Button(master,text="CHAT",font=("",20),command=lambda:self.chat(e1_text.get(),))
+		b1 = tk.Button(master,text="CHAT",font=("",20),command=lambda:self.chat_ui.chat(e1_text.get(),))
 		self.mainWidgets = {"l1":l1,
 							"l2":l2,
 							"e1":e1,
@@ -45,34 +45,16 @@ class MainWindow(LoginWindow):
 	def hideMain(self):
 		for widget_name,widget_instance in self.mainWidgets.items():
 			widget_instance.place_forget()
-	def login(self):
-		login_api = "http://localhost:8080/api/login"
-		credentials = {"username":self.loginTextVariables["e1_text"].get(),
-					   "password":self.loginTextVariables["e2_text"].get()}
-		response = requests.post(login_api,data=credentials)
-		json = response.json()
-		print(json)
-		if json["bad_credentials"]:
-			self.loginWidgets["label4"].place(x=150,y=130)
-		else:
-			with open("token","w") as file:
-				file.write(json["token"])
-			self.hideLogin()
-			self.showMain()
-		print("DSADSSADA321321321")
-	def chat(self,receiver):
-		with open("token") as file:
-			token = file.readlines()[0]
-			print(token)
-			conversation_api = "http://localhost:8080/api/{}/chat/{}".format(token,receiver)
-		print(conversation_api)
-		response = requests.get(conversation_api)
-		json = response.json()
-
-		if json.get("receiver_not_found"):
-			print("receiver_not_found")
-		else:
-			self.chat_ui.current_conversation_id = json["conversation_id"]
-			print(json)
-			self.hideMain()
-			self.chat_ui.showChat(receiver)
+	def checkLoggedIn(self):
+		try:
+			with open("token") as file:
+				token = file.readlines()[0]
+				validate_token_api = f"http://localhost:8080/api/validate_token/{token}"
+				validate_token_api_res = requests.get(validate_token_api)
+				json = validate_token_api_res.json()
+				if json["valid_token"]:
+					return self.showMain()
+				else:
+					return self.login_ui.showLogin()
+		except FileNotFoundError:
+			self.login_ui.showLogin()
