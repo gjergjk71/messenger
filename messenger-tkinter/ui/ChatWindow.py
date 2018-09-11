@@ -18,7 +18,7 @@ class ChatWindow():
 		txt2 = tk.Text(master,width=60,height=2)
 		txt2.config(font=("consolas", 12), undo=True, wrap='word')
 		txt2.bind("<Return>",lambda x:self.sendMessage(content=txt2.get("1.0",tk.END)))
-		b1 = tk.Button(master,width=20,height=2,text="SEND")
+		b1 = tk.Button(master,width=20,height=2,text="SEND",command=lambda:self.sendMessage(content=txt2.get("1.0",tk.END)))
 		self.ChatWidgets = {"l1":l1,
 							"txt_frm":txt_frm,
 							"txt":txt,
