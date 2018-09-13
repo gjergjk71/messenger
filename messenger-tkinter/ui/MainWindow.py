@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.messagebox
 from ui.LoginWindow import LoginWindow
 from ui.ChatWindow import ChatWindow
 import requests
@@ -45,6 +46,7 @@ class MainWindow:
 	def hideMain(self):
 		for widget_name,widget_instance in self.mainWidgets.items():
 			widget_instance.place_forget()
+
 	def checkLoggedIn(self):
 		try:
 			with open("token") as file:
@@ -56,5 +58,11 @@ class MainWindow:
 					return self.showMain()
 				else:
 					return self.login_ui.showLogin()
-		except FileNotFoundError:
-			self.login_ui.showLogin()
+		except (FileNotFoundError,requests.exceptions.ConnectionError) as e:
+			if e == FileNotFoundError:
+				self.login_ui.showLogin()
+			else:
+				print("coudn't connect to the server")
+				self.login_ui.showLogin()
+				if tk.messagebox.showwarning("Try again later!","Our servers are currently under maintenance."):
+					self.master.destroy()
