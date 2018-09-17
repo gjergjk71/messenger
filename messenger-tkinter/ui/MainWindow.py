@@ -74,11 +74,10 @@ class MainWindow:
 						self.login_ui.showLogin()
 				else:
 					self.login_ui.showLogin()
-		except (FileNotFoundError,requests.exceptions.ConnectionError) as e:
-			if e == FileNotFoundError:
-				self.login_ui.showLogin()
-			else:
-				print("coudn't connect to the server")
-				self.login_ui.showLogin()
-				if tk.messagebox.showwarning("Try again later!","Our servers are currently under maintenance."):
-					self.master.destroy()
+		except FileNotFoundError:
+			self.login_ui.showLogin()
+		except requests.exceptions.ConnectionError:
+			print("coudn't connect to the server")
+			self.login_ui.showLogin()
+			if tk.messagebox.showwarning("Coudn't connect to the server! Please try later"):
+				self.master.destroy()
