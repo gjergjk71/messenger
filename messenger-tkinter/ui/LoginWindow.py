@@ -1,5 +1,6 @@
 import tkinter as tk
 import requests
+from error_handlers import handle_requests_errors
 
 class LoginWindow():
 	def __init__(self,master,MainWindowInstance):
@@ -53,15 +54,17 @@ class LoginWindow():
 			print(widget_name)
 			widget_instance.place_forget()
 	def login(self):
-		login_api = "http://localhost:8080/api/login"
-		credentials = {"username":self.loginTextVariables["e1_text"].get(),
-					   "password":self.loginTextVariables["e2_text"].get()}
-		response = requests.post(login_api,data=credentials)
-		json = response.json()
-		if json["bad_credentials"]:
-			self.loginWidgets["label4"].place(x=150,y=130)
-		else:
-			with open("token","w") as file:
-				file.write(json["token"])
-			self.hideLogin()
-			self.MainWindowInstance.showMain()
+		@handle_requests_errors
+		def func():
+			login_api = "http://localhost:8080/api/login"
+			credentials = {"username":self.loginTextVariables["e1_text"].get(),
+						   "password":self.loginTextVariables["e2_text"].get()}
+			response = requests.post(login_api,data=credentials)
+			json = response.json()
+			if json["bad_credentials"]:
+				self.loginWidgets["label4"].place(x=150,y=130)
+			else:
+				with open("token","w") as file:
+					file.write(json["token"])
+				self.hideLogin()
+				self.MainWindowInstance.showMain()

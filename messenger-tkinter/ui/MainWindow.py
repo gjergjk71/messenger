@@ -1,3 +1,4 @@
+from error_handlers import handle_requests_errors
 import tkinter as tk
 import tkinter.messagebox
 from ui.LoginWindow import LoginWindow
@@ -58,26 +59,29 @@ class MainWindow:
 		self.hideMain()
 		self.login_ui.showLogin()
 	def checkLoggedIn(self):
-		try:
-			with open("token") as file:
-				try:
-					token = file.readlines()[0]
-				except IndexError:
-					token = ""
-				if token:
-					validate_token_api = f"http://localhost:8080/api/validate_token/{token}"
-					validate_token_api_res = requests.get(validate_token_api)
-					json = validate_token_api_res.json()
-					if json["valid_token"]:
-						self.showMain()
+		@handle_requests_errors
+		def func():
+			try:
+				with open("token") as file:
+					try:
+						token = file.readlines()[0]
+					except IndexError:
+						token = ""
+					if token:
+						validate_token_api = f"http://localhost:8080/api/validate_token/{token}"
+						validate_token_api_res = requests.get(validate_token_api)
+						json = validate_token_api_res.json()
+						if json["valid_token"]:
+							self.showMain()
+						else:
+							self.login_ui.showLogin()
 					else:
 						self.login_ui.showLogin()
-				else:
-					self.login_ui.showLogin()
-		except FileNotFoundError:
-			self.login_ui.showLogin()
-		except requests.exceptions.ConnectionError:
-			print("coudn't connect to the server")
-			self.login_ui.showLogin()
-			if tk.messagebox.showwarning("Coudn't connect to the server! Please try later"):
+			except FileNotFoundError:
+				print("FileNotFoundError")
+				self.login_ui.showLogin()
+			except requests.exceptions.ConnectionError:
+				print("coudn't connect to the server")
+				self.login_ui.showLogin()
+				tkinter.messagebox.showwarning("Connection refused","Connection refused! Please try again later.")
 				self.master.destroy()
