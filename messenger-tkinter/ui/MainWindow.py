@@ -3,6 +3,7 @@ import tkinter.messagebox
 from ui.LoginWindow import LoginWindow
 from ui.ChatWindow import ChatWindow
 import requests
+import os
 
 class MainWindow:
 	def __init__(self,master):
@@ -32,21 +33,30 @@ class MainWindow:
 		e1_text = tk.StringVar()
 		e1 = tk.Entry(master,textvariable=e1_text,font=("",20))
 		b1 = tk.Button(master,text="CHAT",font=("",20),command=lambda:self.chat_ui.chat(e1_text.get(),))
+		b2 = tk.Button(master,text="LOGOUT",font=("",20),command=self.logout)
 		self.mainWidgets = {"l1":l1,
 							"l2":l2,
 							"e1":e1,
-							"b1":b1}
+							"b1":b1,
+							"b2":b2}
 		self.mainTextVariables = {"e1_text":e1_text}
 	def showMain(self):
 		self.mainWidgets["l1"].place(x=50,y=50) 
 		self.mainWidgets["l2"].place(x=100,y=150) 
 		self.mainWidgets["e1"].place(x=400,y=170) 
 		self.mainWidgets["b1"].place(x=350,y=230) 
+		self.mainWidgets["b2"].place(x=750,y=10) 
 
 	def hideMain(self):
 		for widget_name,widget_instance in self.mainWidgets.items():
 			widget_instance.place_forget()
-
+	def logout(self):
+		if os.path.exists("token"):
+			os.remove("token")
+		else:
+			print("Token not found so not deleted.")
+		self.hideMain()
+		self.login_ui.showLogin()
 	def checkLoggedIn(self):
 		try:
 			with open("token") as file:
