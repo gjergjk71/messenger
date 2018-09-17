@@ -60,14 +60,20 @@ class MainWindow:
 	def checkLoggedIn(self):
 		try:
 			with open("token") as file:
-				token = file.readlines()[0]
-				validate_token_api = f"http://localhost:8080/api/validate_token/{token}"
-				validate_token_api_res = requests.get(validate_token_api)
-				json = validate_token_api_res.json()
-				if json["valid_token"]:
-					return self.showMain()
+				try:
+					token = file.readlines()[0]
+				except IndexError:
+					token = ""
+				if token:
+					validate_token_api = f"http://localhost:8080/api/validate_token/{token}"
+					validate_token_api_res = requests.get(validate_token_api)
+					json = validate_token_api_res.json()
+					if json["valid_token"]:
+						self.showMain()
+					else:
+						self.login_ui.showLogin()
 				else:
-					return self.login_ui.showLogin()
+					self.login_ui.showLogin()
 		except (FileNotFoundError,requests.exceptions.ConnectionError) as e:
 			if e == FileNotFoundError:
 				self.login_ui.showLogin()
